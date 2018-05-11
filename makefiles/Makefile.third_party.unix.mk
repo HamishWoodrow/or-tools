@@ -168,9 +168,9 @@ endif
 ##  Protobuf  ##
 ################
 # This uses Protobuf cmake-based build.
-build_protobuf: dependencies/install/bin/protoc
+build_protobuf: dependencies/install/lib/libprotobuf.$L
 
-dependencies/install/bin/protoc: dependencies/install/lib/libglog.$L dependencies/sources/protobuf-$(PROTOBUF_TAG) | dependencies/install
+dependencies/install/lib/libprotobuf.$L: dependencies/install/lib/libglog.$L dependencies/sources/protobuf-$(PROTOBUF_TAG) | dependencies/install
 	cd dependencies/sources/protobuf-$(PROTOBUF_TAG) && \
   $(SET_COMPILER) $(CMAKE) -Hcmake -Bbuild_cmake \
     -DCMAKE_PREFIX_PATH="$(OR_TOOLS_TOP)/dependencies/install" \

@@ -198,13 +198,18 @@ ifeq ($(PLATFORM),MACOSX)
   JNI_LIB_EXT = jnilib
 
   SWIG_LIB_SUFFIX = so# To overcome a bug in Mac OS X loader.
-  LINK_CMD = ld -arch x86_64 -dylib -flat_namespace -undefined suppress \
+  LINK_CMD = clang++ \
+ -Wl,-search_paths_first \
+ -Wl,-headerpad_max_install_names \
+ -shared
+	#-arch x86_64 -dylib -flat_namespace -undefined suppress \
  -macosx_version_min $(MAC_MIN_VERSION) -lSystem \
  -compatibility_version $(OR_TOOLS_SHORT_VERSION) \
  -current_version $(OR_TOOLS_SHORT_VERSION)
   PRE_LIB = -L$(OR_ROOT)lib -l
   POST_LIB =
-  LINK_FLAGS = -Wl,-rpath,"@loader_path;@loader_path/../lib;@loader_path/../dependencies/install/lib"
+  LINK_FLAGS = \
+ -Wl,-rpath,@loader_path -Wl,-rpath,@loader_path/../lib -Wl,-rpath,@loader_path/../dependencies/install/lib
 endif  # MAC OS X
 
 DEPENDENCIES_INC = -I$(INC_DIR) -I$(EX_DIR) -I$(GEN_DIR) \
