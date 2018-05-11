@@ -183,8 +183,10 @@ dependencies/install/bin/protoc: dependencies/install/lib/libglog.$L dependencie
   $(CMAKE) --build build_cmake -- -j 4 && \
   $(CMAKE) --build build_cmake --target install
 
-dependencies/sources/protobuf-$(PROTOBUF_TAG): | dependencies/sources
-	git clone --quiet -b v$(PROTOBUF_TAG) https://github.com/google/protobuf.git dependencies/sources/protobuf-$(PROTOBUF_TAG)\
+dependencies/sources/protobuf-$(PROTOBUF_TAG): patches/protobuf.patch | dependencies/sources
+	git clone --quiet -b v$(PROTOBUF_TAG) https://github.com/google/protobuf.git dependencies/sources/protobuf-$(PROTOBUF_TAG)
+	cd dependencies/sources/protobuf-$(PROTOBUF_TAG) && \
+    git apply $(OR_TOOLS_TOP)/patches/protobuf.patch
 
 # Install Java protobuf
 dependencies/install/lib/protobuf.jar: dependencies/install/bin/protoc
