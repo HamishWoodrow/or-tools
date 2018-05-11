@@ -107,15 +107,15 @@ build_gflags: dependencies/install/lib/libgflags.$L
 
 dependencies/install/lib/libgflags.$L: dependencies/sources/gflags-$(GFLAGS_TAG) | dependencies/install
 	cd dependencies/sources/gflags-$(GFLAGS_TAG) && \
-  $(SET_COMPILER) $(CMAKE) -H. -Bbuild \
+  $(SET_COMPILER) $(CMAKE) -H. -Bbuild_cmake \
     -DBUILD_SHARED_LIBS=ON \
     -DBUILD_STATIC_LIBS=OFF \
     -DBUILD_TESTING=OFF \
     -DGFLAGS_NAMESPACE=gflags \
     -DCMAKE_CXX_FLAGS="-fPIC $(MAC_VERSION)" \
     -DCMAKE_INSTALL_PREFIX=../../install && \
-  $(CMAKE) --build build -- -j 4 && \
-  $(CMAKE) --build build --target install
+  $(CMAKE) --build build_cmake -- -j 4 && \
+  $(CMAKE) --build build_cmake --target install
 
 dependencies/sources/gflags-$(GFLAGS_TAG): | dependencies/sources
 	git clone --quiet -b v$(GFLAGS_TAG) https://github.com/gflags/gflags.git dependencies/sources/gflags-$(GFLAGS_TAG)
@@ -140,14 +140,14 @@ build_glog: dependencies/install/lib/libglog.$L
 
 dependencies/install/lib/libglog.$L: dependencies/install/lib/libgflags.$L dependencies/sources/glog-$(GLOG_TAG) | dependencies/install
 	cd dependencies/sources/glog-$(GLOG_TAG) && \
-  $(SET_COMPILER) $(CMAKE) -H. -Bbuild \
+  $(SET_COMPILER) $(CMAKE) -H. -Bbuild_cmake \
     -DCMAKE_PREFIX_PATH="$(OR_TOOLS_TOP)/dependencies/install" \
     -DBUILD_SHARED_LIBS=ON \
     -DBUILD_TESTING=OFF \
     -DCMAKE_CXX_FLAGS="-fPIC $(MAC_VERSION)" \
     -DCMAKE_INSTALL_PREFIX=../../install && \
-  $(CMAKE) --build build -- -j 4 && \
-  $(CMAKE) --build build --target install
+  $(CMAKE) --build build_cmake -- -j 4 && \
+  $(CMAKE) --build build_cmake --target install
 
 dependencies/sources/glog-$(GLOG_TAG): | dependencies/sources
 	git clone --quiet -b v$(GLOG_TAG) https://github.com/google/glog.git dependencies/sources/glog-$(GLOG_TAG)
@@ -172,7 +172,7 @@ build_protobuf: dependencies/install/bin/protoc
 
 dependencies/install/bin/protoc: dependencies/install/lib/libglog.$L dependencies/sources/protobuf-$(PROTOBUF_TAG) | dependencies/install
 	cd dependencies/sources/protobuf-$(PROTOBUF_TAG) && \
-  $(SET_COMPILER) $(CMAKE) -Hcmake -Bbuild \
+  $(SET_COMPILER) $(CMAKE) -Hcmake -Bbuild_cmake \
     -DCMAKE_PREFIX_PATH="$(OR_TOOLS_TOP)/dependencies/install" \
     -DBUILD_SHARED_LIBS=ON \
     -DBUILD_TESTING=OFF \
@@ -180,8 +180,8 @@ dependencies/install/bin/protoc: dependencies/install/lib/libglog.$L dependencie
     -Dprotobuf_BUILD_EXAMPLES=OFF \
     -DCMAKE_CXX_FLAGS="-fPIC $(MAC_VERSION)" \
     -DCMAKE_INSTALL_PREFIX=../../install && \
-  $(CMAKE) --build build -- -j 4 && \
-  $(CMAKE) --build build --target install
+  $(CMAKE) --build build_cmake -- -j 4 && \
+  $(CMAKE) --build build_cmake --target install
 
 dependencies/sources/protobuf-$(PROTOBUF_TAG): | dependencies/sources
 	git clone --quiet -b v$(PROTOBUF_TAG) https://github.com/google/protobuf.git dependencies/sources/protobuf-$(PROTOBUF_TAG)\
